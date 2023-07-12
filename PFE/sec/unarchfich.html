@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var name, birthdate, gender, adress, jobadress, familystatus, livingsituation, height, weight, chronicdiseases, bloodtype, medicalintolerance, foodallergies, habitualconsumption, email, phone;
+         var d = window.confirm("want to return it to the list");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var url = new URL(url_string); // url = file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var c = url.searchParams.get("id"); //c =6234e9cc1f909e1840082460
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/patients/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var patients = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    name = patients.name;
+                    birthdate = patients.birthdate;
+                    gender = patients.gender;
+                    adress = patients.adress;
+                    jobadress = patients.jobadress;
+                    familystatus = patients.familystatus;
+                    livingsituation = patients.livingsituation;
+                    height = patients.height;
+                    weight = patients.weight;
+                    chronicdiseases = patients.chronicdiseases;
+                    bloodtype = patients.bloodtype;
+                    medicalintolerance = patients.medicalintolerance;
+                    foodallergies = patients.foodallergies;
+                    habitualconsumption = patients.habitualconsumption;
+                    email = patients.email;
+                    phone = patients.phone;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/patients/"+c;
+                              
+                var data = {};
+                data.name   = name;
+                data.birthdate      = birthdate;
+                data.gender   = gender;
+                data.adress   = adress;
+                data.jobadress   = jobadress;
+                data.familystatus   = familystatus;
+                data.livingsituation   = livingsituation;
+                data.height   = height;
+                data.weight   = weight;
+                data.chronicdiseases   = chronicdiseases;
+                data.bloodtype   = bloodtype;
+                data.medicalintolerance   = medicalintolerance;
+                data.foodallergies   = foodallergies;
+                data.habitualconsumption   = habitualconsumption;
+                data.email   = email;
+                data.phone   = phone;
+                data.arch = "0";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var patients = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        alert("Fiche Patient  Restored!");
+                        location.replace("listfich.html");
+                    } else {
+                        console.error(patients);
+                        location.replace("archivefich.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("archivefich.html");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Log in</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="index.html"><b>Doctor</b></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Sign in to start your session</p>
+
+      <form onsubmit="return false">
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" placeholder="Email" id="email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Password" id="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                Remember Me
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit"  onclick="login()" class="btn btn-primary btn-block">Sign In</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <div class="social-auth-links text-center mb-3">
+        <p>- OR -</p>
+        <a href="#" class="btn btn-block btn-primary">
+          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+        </a>
+        <a href="#" class="btn btn-block btn-danger">
+          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+        </a>
+      </div>
+      <!-- /.social-auth-links -->
+
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+<script>
+  function login() {
+    var url = "http://127.0.0.1:3000/doctors"; //definir la collection a manupiler
+    var email = document.getElementById("email").value; // récupération de la email saisir dans notre code html
+    var password = document.getElementById("password").value; // récupération de la password saisir dans notre code html
+    var xhr = new XMLHttpRequest(); // definir une request de connection standard js
+    xhr.open("GET", url, true); // choisir la méthode get comme une méthode d'accès au serveur et récupérer les données .
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8"); // choisir l'encodage utf-8 pour que la resultat retourne peux avoir différents format de text comme les côté , les accent …..
+    xhr.onload = function () {
+      // load les données à partir de la serveur -> début connection
+      var doctors = JSON.parse(xhr.responseText); // conversion des données en format json
+      if (xhr.readyState == 4 && xhr.status == "200") {
+        // if la status retourné par la serveur est 200 donc ont dans le cas succes
+        access = false; // définir une variable access par défaut avec la valeur false
+        /* bouclé la liste des utilisateurs */
+        for (i = 0; i < doctors.length; i++) {
+          if (doctors[i].email == email && doctors[i].password == password) {
+            // if les données recuperer et la valeur auctual dans la base sont égaux alors en changer access a true .
+            access = true;
+            localStorage.setItem("id", doctors[i]._id);
+            localStorage.setItem("name", doctors[i].name);
+          }
+        }
+        // si la variable accès contient true on est autorisé à accéder.
+        if (access) {
+          alert("Welcome");
+          console.log(xhr);
+          location.replace("index.html");
+        } else {
+          alert("Invalid Login OR Password");
+        }
+      } else {
+        alert("Error Server Connection");
+      }
+    };
+    xhr.send();
+  }
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>

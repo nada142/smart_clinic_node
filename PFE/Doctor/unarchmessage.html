@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var from,to, subject, message;
+         var d = window.confirm("want to return it to the list");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var url = new URL(url_string); // url = file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var c = url.searchParams.get("id"); //c =6234e9cc1f909e1840082460
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/messages/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var messages = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    from = messages.from;
+                    to = messages.to;
+                    subject = messages.subject;
+                    message = messages.message;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/messages/"+c;
+                              
+                var data = {};
+                data.from   = from;
+                data.to   = to;
+                data.subject = subject;
+                data.message   = message;
+                data.arch = "0";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var messages = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        alert("Message Restored!");
+                        location.replace("listMessage.html");
+                    } else {
+                        console.error(messages);
+                        location.replace("archiveMessage.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("archiveMessage.html");
+        }
+    </script>
+</body>
+</html>

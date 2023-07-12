@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>We Care | Registration Page</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <a href="index.html"><b>Register</b></a>
+  </div>
+
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">New To We Care ?</p>
+
+      <form action="index.html" method="post" onsubmit="return false">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" id="name" placeholder="Full name">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" id="email" placeholder="Email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input required onkeyup="validate()" onblur="hide()" type="password" class="form-control" id="password" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" placeholder="Password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input required type="password" class="form-control" id="rpassword" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" placeholder="Repeat Password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock" id="msg"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- /.col -->
+          <div class="col-md-3"></div>
+          <div class="col-6">
+            <button type="submit" onclick="add()" class="btn btn-primary btn-block">Register</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+    </div>
+  </div>
+    <!-- /.form-box -->
+  </div><!-- /.card -->
+</div>
+<!-- /.register-box -->
+<script type="text/javascript">
+  function validate() {
+    var msg;
+    var str = document.getElementById("password").value;
+    if (
+      str.match(/[0-9]/g) &&
+      str.match(/[A-Z]/g) &&
+      str.match(/[a-z]/g) &&
+      str.match(/[^a-zA-Z\d]/g) &&
+      str.length >= 8
+    )
+      msg = `<p style='color:green'>Mot de passe fort.
+      </p>`;
+    else
+      msg = `<p style='color:red'>Mot de passe faible.</p>
+    <ul>
+        <li>Au moins 1 caractère majuscule.</li>
+        <li>Au moins 1 caractère minuscule.</li>
+        <li>Au moins 1 chiffre.</li>
+        <li>Au moins 1 caractère spécial.</li>
+        <li>Minimum 8 caractères.</li>
+        </ul>`;
+    document.getElementById("msg").innerHTML = msg;
+  }
+  function hide() {
+    var msg = document.getElementById("msg").innerHTML;
+    if (msg.match("Mot de passe faible")) {
+      document.getElementById("msg").innerHTML = "";
+    }
+  }
+</script>
+
+<script>
+  var res = document.getElementById("name");
+  res.innerHTML = localStorage.getItem("username");
+</script>
+<script>
+function add() {
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    var mail = document.getElementById("email").value;
+    if (mail.match(mailformat)) {
+          if (document.getElementById("email").value || document.getElementById("name").value)
+          {
+        var msg = document.getElementById("msg").innerHTML;
+        var success = "Mot de passe fort.";
+        if (msg.match(success)) {
+          if (
+            document.getElementById("password").value ==
+            document.getElementById("rpassword").value
+          ) {
+            // Post a user
+                var url = "http://127.0.0.1:3000/patients";
+                var data = {};
+                // récupération des données dans la variable data .
+                data.name = document.getElementById("name").value;
+                data.birthdate = "";
+                data.gender = "";
+                data.cin = "";
+                data.adress= "";
+                data.job= "";
+                data.jobadress= "";
+                data.familystatus= "";
+                data.livingsituation= "";
+                data.height= "";
+                data.weight= "";
+                data.chronicdiseases = "";
+                data.bloodtype= "";
+                data.medicalintolerance="";
+                data.foodallergies= "";
+                data.habitualconsumption= "";
+                data.email= document.getElementById("email").value;
+                data.phone= "";
+                data.password= document.getElementById("password").value;
+                data.arch = "0";
+
+    
+            var json = JSON.stringify(data);
+            var xhr = new XMLHttpRequest(); // definir une request de connection standard js
+            xhr.open("POST", url, true); // choisir la méthode post comme méthode d'accès au serveur pour avoir la possibilité d'envoyer les données au serveur .
+            xhr.setRequestHeader(
+              "Content-type",
+              "application/json; charset=utf-8"
+            );
+            xhr.onload = function () {
+              var patients = JSON.parse(xhr.responseText);
+              if (xhr.readyState == 4 && xhr.status == "200") {
+                console.table(patients);
+                    alert("succesful Registration, Welcome to We Care");
+                    location.replace("login.html");
+              } else {
+                alert(patients.message);
+                console.table(patients);
+              }
+            };
+            xhr.send(json);
+          } else {
+            alert("Confirm password");
+          }
+        } else {
+          alert("incorrect password");
+        }
+          } else {
+            alert("Veuillez remplir tous les champs");
+          }
+    } else {
+      alert(" incorrect Email ");
+    }
+    }
+</script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>

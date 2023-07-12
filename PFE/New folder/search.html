@@ -1,0 +1,79 @@
+<input id="searchp" placeholder="Search here..." />
+<div class="row" id="rdv"></div>
+
+<script>
+  // Create a request variable and assign a new XMLHttpRequest object to it.
+  var request = new XMLHttpRequest();
+
+  // Open a new connection, using the GET request on the URL endpoint
+  request.open("GET", "http://127.0.0.1:3000/rdvs", true);
+
+  request.onload = function () {
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response);
+
+    console.log(data);
+    var j = 1;
+    var ee = document.getElementById("rdv");
+    data.forEach((i) => {
+      if(i.arch == "0"){
+      ch =
+        `
+
+        <div class="col-md-3 contact">
+          <div class="card card-primary shadow-none contact2" >
+            <div class="card-header">
+              <h3 class="card-title">`+i.docname+`  </h3>
+
+              <div class="card-tools">
+              </div>
+              <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-8">
+                  <p>`+i.patientname+`<br> `+i.date+`<br>`+i.time+`</p>
+                  </div>
+                <div class="col-4">
+                  <a href="addRdv.html?id=`+i._id+`" class="btn btn-primary">Accept</a>
+                  <a href="addRdv.html?id=`+i._id+`" class="btn btn-primary">Refuse</a>
+                  </div>
+              
+              
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+            `;
+      ee.insertAdjacentHTML("beforeend", ch);}
+    });
+  };
+
+  // Send request
+  request.send();
+</script>
+<script>
+  /*runs each time a new character is entered*/
+  $("#searchp").keyup(function () {
+    /*takes inpt from input box*/
+    var seterm = $("#searchp").val();
+    /*scans through each element*/
+    for (var i = 0; i < $(".contact").length; i++) {
+      /*Makes all elements visible*/
+
+      $(".contact:eq(" + i + ")").css("display", "flex");
+      $(".contact2:eq(" + i + ")").css("display", "flex");
+      /*If it doesn't match the input it is hidden*/
+      if (
+        $(".contact:eq(" + i + ")")
+          .text()
+          .toLowerCase()
+          .indexOf(seterm) < 0
+      ) {
+        $(".contact:eq(" + i + ")").css("display", "none");
+      }
+    }
+  });
+</script>

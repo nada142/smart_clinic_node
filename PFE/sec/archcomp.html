@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var name, phone, email, date, total;
+         var d = window.confirm("want to place it in the archive");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updateadmin.html?id=622f5ab629af451f488f2198
+            var url = new URL(url_string); // url = file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updateadmin.html?id=622f5ab629af451f488f2198
+            var c = url.searchParams.get("id"); //c =622f5ab629af451f488f2198
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/comptabilites/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var comptabilites = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    name = comptabilites.name;
+                    phone = comptabilites.phone;
+                    email = comptabilites.email;
+                    date = comptabilites.date;
+                    total = comptabilites.total;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/comptabilites/"+c;
+                              
+                var data = {};
+                data.name   = name;
+                data.phone      = phone;
+                data.email   = email;
+                data.date   = date;
+                data.total   = total;
+                data.arch = "1";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var comptabilites = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(comptabilites);
+                        alert("Payment Bill Archived!");
+                        location.replace("archivecomp.html");
+                    } else {
+                        console.error(comptabilites);
+                        location.replace("listComp.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("listComp.html");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form onsubmit="return false">
+        <input type="text" id="username" placeholder="enter username">
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <input type="submit" value="Add Admin" onclick="add()">
+    </form>
+
+    <script>
+        function add(){
+            var url = "http://127.0.0.1:3000/admins";
+            var data = {};
+            data.username = document.getElementById("username").value;
+            data.email = document.getElementById("email").value;
+            data.password = document.getElementById("password").value;
+            var json = JSON.stringify(data);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+            xhr.onload = function () {
+                var admins= JSON.parse(xhr.responseText);
+                if (xhr.readyState == 4 && xhr.status == "200") {
+                    console.table(admins);
+                    alert("Admin Added");
+                    location.replace("index.html");
+                } else {
+                    alert(admins.message);
+                    console.table(admins);
+                }
+            }
+            xhr.send(json);
+        }
+    </script>
+</body>
+</html>

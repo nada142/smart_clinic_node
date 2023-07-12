@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var name, birthdate, gender, status, country, city,phone,bloodtype,cin,exp, email, password;
+         var d = window.confirm("want to place it in the archive");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatesec.html?id=6234f138d5017e27b0d028ae
+            var url = new URL(url_string); // url =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatesec.html?id=6234f138d5017e27b0d028ae
+            var c = url.searchParams.get("id"); //c =6234f138d5017e27b0d028ae
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/secretarys/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var secretarys = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    name = secretarys.name;
+                    birthdate = secretarys.birthdate;
+                    gender = secretarys.gender;
+                    status = secretarys.status;
+                    country = secretarys.country;
+                    city = secretarys.city;
+                    phone = secretarys.phone;
+                    bloodtype = secretarys.bloodtype;
+                    cin = secretarys.cin;
+                    exp = secretarys.exp;
+                    email = secretarys.email;
+                    password = secretarys.password;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/secretarys/"+c;
+                              
+                var data = {};
+                data.name   = name;
+                data.birthdate   = birthdate;
+                data.gender   = gender;
+                data.status   = status;
+                data.country   = country;
+                data.city   = city;
+                data.phone   = phone;
+                data.bloodtype   = bloodtype;
+                data.cin   = cin;
+                data.exp   = exp;
+                data.email      = email;
+                data.password   = password;
+                data.arch = "1";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var secretarys = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        alert("Secretarys Archived!");
+                        location.replace("archivesec.html");
+                    } else {
+                        console.error(secretarys);
+                        location.replace("listSec.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("listSec.html");
+        }
+    </script>
+</body>
+</html>

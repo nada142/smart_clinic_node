@@ -1,0 +1,28 @@
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<input id="searchp" placeholder="Search here..." />
+
+<script>
+  /*runs each time a new character is entered*/
+  $("#searchp").keyup(function () {
+    /*takes inpt from input box*/
+    var seterm = $("#searchp").val();
+    /*scans through each element*/
+    for (var i = 0; i < $(".contact").length; i++) {
+      /*Makes all elements visible*/
+
+      $(".contact:eq(" + i + ")").css("display", "flex");
+      $(".contact2:eq(" + i + ")").css("display", "flex");
+      /*If it doesn't match the input it is hidden*/
+      if (
+        $(".contact:eq(" + i + ")")
+          .text()
+          .toLowerCase()
+          .indexOf(seterm) < 0
+      ) {
+        $(".contact:eq(" + i + ")").css("display", "none");
+      }
+    }
+  });
+</script>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var name, birthdate, gender, weight, date,medication;
+         var d = window.confirm("want to place it in the archive");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updateadmin.html?id=622f5ab629af451f488f2198
+            var url = new URL(url_string); // url = file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updateadmin.html?id=622f5ab629af451f488f2198
+            var c = url.searchParams.get("id"); //c =622f5ab629af451f488f2198
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/ordonnances/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var ordonnances = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    name = ordonnances.name;
+                    birthdate = ordonnances.birthdate;
+                    gender = ordonnances.gender;
+                    weight = ordonnances.weight;
+                    date = ordonnances.date;
+                    medication = ordonnances.medication;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/ordonnances/"+c;
+                              
+                var data = {};
+                data.name   = name;
+                data.birthdate   = birthdate;
+                data.gender   = gender;
+                data.weight   = weight;
+                data.date   = date;
+                data.medication   = medication;
+                data.arch = "1";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var ordonnances = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        console.table(ordonnances);
+                        alert("Ordonnance Archived!");
+                        location.replace("archiveOrdonnance.html");
+                    } else {
+                        console.error(ordonnances);
+                        location.replace("listOrdonnance.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("listOrdonnance.html");
+        }
+    </script>
+</body>
+</html>

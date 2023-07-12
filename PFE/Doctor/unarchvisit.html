@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var  name, birthdate, gender, email, date, time, observations;
+         var d = window.confirm("want to return it to the list");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var url = new URL(url_string); // url = file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var c = url.searchParams.get("id"); //c =6234e9cc1f909e1840082460
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/visits/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var visits = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    name = visits.name;
+                    birthdate = visits.birthdate;
+                    gender = visits.gender;
+                    email = visits.email;
+                    date = visits.date;
+                    time = visits.time;
+                    observations = visits.observations;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/visits/"+c;
+                              
+                var data = {};
+                data.name   = name;
+                data.birthdate   = birthdate;
+                data.gender   = gender;
+                data.email   = email;
+                data.date   = date;
+                data.time      = time;
+                data.observations   = observations;
+                data.arch = "0";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var visits = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        alert("Visit Restored!");
+                        location.replace("listVisit.html");
+                    } else {
+                        console.error(visits);
+                        location.replace("archivevisit.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("archivevisit.html");
+        }
+    </script>
+</body>
+</html>

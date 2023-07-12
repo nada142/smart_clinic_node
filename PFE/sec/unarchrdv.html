@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        var name, email, phone, date,time,reason;
+         var d = window.confirm("want to return it to the list");
+        if (d == true)
+        {
+            var url_string = window.location.href // url_string =file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var url = new URL(url_string); // url = file:///C:/Users/GMI/Desktop/PFE/AdminLTE-master/updatedoc.html?id=6234e9cc1f909e1840082460
+            var c = url.searchParams.get("id"); //c =6234e9cc1f909e1840082460
+            console.log(c);
+
+            // Post a user
+            var url3 = "http://127.0.0.1:3000/rdvs/" + c ;
+            var xhr3 = new XMLHttpRequest();
+            xhr3.open("GET", url3, true);
+
+            xhr3.onload = function () {
+                var rdvs = JSON.parse(xhr3.responseText);
+                if (xhr3.readyState == 4 && xhr3.status == "200") {
+                    name = rdvs.name;
+                    email = rdvs.email;
+                    phone = rdvs.phone;
+                    date = rdvs.date;
+                    time = rdvs.time;
+                    reason = rdvs.reason;
+                    update();
+                } else {
+
+                    console.log("error");
+                }
+            }
+
+            xhr3.send(null);
+
+            function update(){
+                var url_string = window.location.href
+                var url = new URL(url_string);
+                var c = url.searchParams.get("id");
+          
+                var url = "http://127.0.0.1:3000/rdvs/"+c;
+                              
+                var data = {};
+                data.name   = name;
+                data.email   = email;
+                data.phone   = phone;
+                data.date   = date;
+                data.time   = time;
+                data.reason   = reason;
+                data.arch = "0";
+
+                var json = JSON.stringify(data);
+                var xhr = new XMLHttpRequest();
+                xhr.open("PUT", url, true);
+                xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+                xhr.onload = function () {
+                    var rdvs = JSON.parse(xhr.responseText);
+                    if (xhr.readyState == 4 && xhr.status == "200") {
+                        alert("Appointment Restored!");
+                        location.replace("listRdv.html");
+                    } else {
+                        console.error(rdvs);
+                        location.replace("archiverdv.html");
+                    }
+                }
+                xhr.send(json);
+            }
+        }
+        else
+        {
+            location.replace("archiverdv.html");
+        }
+    </script>
+</body>
+</html>
